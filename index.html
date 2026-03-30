@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Rambha Motor Driving Training School | Hapur</title>
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-14REGSNFYP"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-14REGSNFYP');
+    </script>
+    
+    <!-- External Scripts & Styles -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+    <style>
+        body { font-family: 'Lexend', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-spinner {
+            border: 4px solid rgba(23, 222, 27, 0.1);
+            border-left-color: #17de1b;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            animation: spin 1s linear infinite;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
+    <script>
+    (function () {
+        emailjs.init("QA3pRowzZ00kdv6aS"); // 🔴 यहाँ अपना EmailJS PUBLIC KEY डालो
+    })();
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-[#0d121b] dark:text-white transition-colors duration-200">
+    <div id="root"></div>
+
+    <!-- Core React Libraries -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/history@5/umd/history.development.js"></script>
+    <script src="https://unpkg.com/react-router@6.3.0/umd/react-router.development.js"></script>
+    <script src="https://unpkg.com/react-router-dom@6.3.0/umd/react-router-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        const { createRoot } = ReactDOM;
+        const { MemoryRouter, Routes, Route, Link, useNavigate, useLocation } = ReactRouterDOM;
+        const LOGO_PATH = "./logo.png";
+
+        // --- Shared Components ---
+
+        const Navbar = () => {
+        const [menuOpen, setMenuOpen] = useState(false);
+        const navigate = useNavigate();
+        const location = useLocation();
+        const isActive = (path) => location.pathname === path;
+
+        return (
+            <React.Fragment>
+
+            {/* HEADER */}
+            <header class="sticky top-0 z-50 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md border-b px-4 md:px-20 lg:px-40 py-3">
+                <div class="flex items-center justify-between">
+
+                {/* LOGO */}
+                <Link to="/" class="flex items-center gap-4 text-primary">
+                    <div class="size-8">
+                    <img
+                        src={LOGO_PATH}
+                        alt="Rambha Motor Logo"
+                        class="w-full h-full object-contain scale-150 md:scale-200"
+                    />
+                    </div>
+                    <div class="flex flex-col">
+                    <h2 class="text-lg font-bold">Rambha Motor</h2>
+                    <p class="text-[10px] uppercase tracking-widest text-[#4c669a]">
+                        Driving Training School, Hapur
+                    </p>
+                    </div>
+                </Link>
+
+                {/* ☰ / ✕ BUTTON */}
+                <button
+                    class="lg:hidden text-primary"
+                    onClick={() => setMenuOpen(true)}
+                    >
+                    <span class="material-symbols-outlined text-3xl">
+                        menu
+                    </span>
+                </button>
+                {/* DESKTOP MENU */}
+                <div class="hidden lg:flex gap-8 items-center">
+                    <nav class="flex gap-8">
+                    {["/", "/about", "/courses", "/gallery", "/road-signs", "/contact"].map((path, i) => {
+                        const labels = ["Home", "About Us", "Courses", "Gallery", "Road Signs", "Contact"];
+                        return (
+                        <Link
+                            key={path}
+                            to={path}
+                            class={`text-sm font-medium ${
+                            isActive(path)
+                                ? "text-primary"
+                                : "hover:text-primary"
+                            }`}
+                        >
+                            {labels[i]}
+                        </Link>
+                        );
+                    })}
+                    </nav>
+
+                    <button
+                    onClick={() => navigate("/contact")}
+                    class="bg-primary text-white px-4 h-10 rounded-lg font-bold"
+                    >
+                    Enroll Now
+                    </button>
+                </div>
+
+                </div>
+            </header>
+
+            {/* OVERLAY */}
+            {/* ❌ CLOSE BUTTON (NEW) */}
+            <button
+                onClick={() => setMenuOpen(false)}
+                class="absolute top-4 right-4 text-primary"
+            >
+                <span class="material-symbols-outlined text-3xl">
+                close
+                </span>
+            </button>
+
+            {/* SLIDE MENU */}
+            <div
+                class={`fixed top-0 right-0 h-full w-[200px]
+                bg-white dark:bg-background-dark
+                rounded-l-2xl shadow-2xl
+                z-50 transform transition-transform duration-300 ease-in-out
+                ${menuOpen ? "translate-x-0" : "translate-x-full"}`}
+                >
+
+                {/* ❌ CLOSE BUTTON */}
+                <button
+                    onClick={() => setMenuOpen(false)}
+                    class="absolute top-4 right-4 text-primary hover:scale-110 transition-transform"
+                    aria-label="Close menu"
+                >
+                    <span class="material-symbols-outlined text-3xl">
+                    close
+                    </span>
+                </button>
+
+                {/* MENU ITEMS */}
+                <div class="pt-16 px-6 flex flex-col gap-5 text-base font-semibold">
+                    <Link
+                    onClick={() => setMenuOpen(false)}
+                    to="/"
+                    class="hover:text-primary transition-colors"
+                    >
+                    Home
+                    </Link>
+
+                    <Link
+                    onClick={() => setMenuOpen(false)}
+                    to="/about"
+                    class="hover:text-primary transition-colors"
+                    >
+                    About Us
+                    </Link>
+
+                    <Link
+                    onClick={() => setMenuOpen(false)}
+                    to="/courses"
+                    class="hover:text-primary transition-colors"
+                    >
+                    Courses
+                    </Link>
+
+                    <Link
+                    onClick={() => setMenuOpen(false)}
+                    to="/gallery"
+                    class="hover:text-primary transition-colors"
+                    >
+                    Gallery
+                    </Link>
+
+                    <Link
+                    onClick={() => setMenuOpen(false)}
+                    to="/road-signs"
+                    class="hover:text-primary transition-colors"
+                    >
+                    Road Signs
+                    </Link>
+
+                    <Link
+                    onClick={() => setMenuOpen(false)}
+                    to="/contact"
+                    class="hover:text-primary transition-colors"
+                    >
+                    Contact
+                    </Link>
+
+                    <button
+                    onClick={() => {
+                        setMenuOpen(false);
+                        navigate("/contact");
+                    }}
+                    class="mt-6 bg-primary text-white py-3 rounded-lg font-bold hover:bg-primary/90 transition-colors"
+                    >
+                    Enroll Now
+                    </button>
+                </div>
+            </div>
+
+            </React.Fragment>
+        );
+        };
+        const Footer = () => (
+            <footer class="bg-white dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800 px-4 md:px-20 lg:px-40 py-12">
+                <div class="layout-content-container max-w-[1200px] mx-auto">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                        <div class="flex flex-col gap-4 col-span-1 md:col-span-1">
+                            <div class="flex items-center gap-2 text-primary">
+                                <div class="size-6">
+                                    <img
+                                    src={LOGO_PATH}
+                                    alt="Rambha Motor Logo"
+                                    class="w-full h-full object-contain scale-200"/>
+                                </div>
+                                <h2 class="text-lg font-bold">Rambha Motor</h2>
+                            </div>
+                            <p class="text-[#4c669a] text-sm">Founded in 2013, we have proudly empowered thousands of residents of Hapur by providing them not only the technical skills of driving, but also the confidence, discipline, and road awareness required to drive safely and responsibly on Indian roads.</p>
+                        </div>
+                        <div>
+                            <h3 class="font-bold mb-6">Quick Links</h3>
+                            <ul class="flex flex-col gap-4 text-sm text-[#4c669a]">
+                                <li><Link class="hover:text-primary transition-colors" to="/about">About School</Link></li>
+                                <li><Link class="hover:text-primary transition-colors" to="/courses">Courses & Fees</Link></li>
+                                <li><Link class="hover:text-primary transition-colors" to="/road-signs">Road Safety Rules</Link></li>
+                                <li><Link class="hover:text-primary transition-colors" to="/contact">Book Lessons</Link></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="font-bold mb-6">Contact</h3>
+                            <ul class="flex flex-col gap-4 text-sm text-[#4c669a]">
+                            <li class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-sm">phone</span>
+                                <a
+                                    href="tel:+919720340320"
+                                    class="hover:text-primary"
+                                >
+                                    +91 9720340320
+                                </a>
+                            </li>
+                            <a
+                                href="mailto:contact.rambhamotors@gmail.com"
+                                class="flex items-center gap-2 text-[#4c669a] hover:text-primary">
+                                <span class="material-symbols-outlined text-sm">mail</span>
+                                contact.rambhamotors@gmail.com
+                            </a>
+                            <a
+                                href="https://maps.app.goo.gl/u8jRisfRjAKG9ejt6"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="flex items-start gap-2 text-[#4c669a] hover:text-primary"
+                            >
+                                <span class="material-symbols-outlined text-sm">location_on</span>
+                                Near ARTO Office, Hapur, UP
+                            </a>
+                            </ul>
+                        </div>
+                <div>
+                    <h3 class="font-bold mb-6">Driving Skills</h3>
+                    <ul class="flex flex-col gap-4 text-sm text-[#4c669a]">
+                        <li>
+                        <Link
+                            to="/contact"
+                            class="hover:text-primary transition-colors font-semibold">
+                            Start Skill Training
+                        </Link>
+                        </li>
+                    </ul>
+                </div>
+
+                </div>
+                    <div class="pt-8 border-t border-gray-100 dark:border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-[#4c669a]">
+                        <p>© 2026 Rambha Motor Driving Training School. All rights reserved.</p>
+                        <div class="flex gap-6">
+                            <a class="hover:text-primary" href="#">Privacy Policy</a>
+                            <a class="hover:text-primary" href="#">Terms of Service</a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        );
+
+        // --- Screen Components ---
+
+        const HomeScreen = () => {
+            const navigate = useNavigate();
+            return (
+                <div class="flex flex-col min-h-screen">
+                    <Navbar />
+                    <main class="flex-1">
+                        {/* Hero Section */}
+                        <section class="px-4 md:px-20 lg:px-40 py-12 lg:py-20">
+                            <div class="layout-content-container flex flex-col max-w-[1200px] mx-auto">
+                                <div class="flex flex-col gap-10 lg:flex-row-reverse items-center">
+                                    <div class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-xl shadow-2xl lg:w-1/2 border-4 border-white dark:border-gray-800" style={{backgroundImage: 'url("./guddu_driving.png")'}}></div>
+                                    <div class="flex flex-col gap-8 lg:w-1/2">
+                                        <div class="flex flex-col gap-4">
+                                            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary w-fit">
+                                                <span class="material-symbols-outlined text-sm">verified</span>
+                                                <span class="text-xs font-bold uppercase tracking-wider">Approved by the Government of Uttar Pradesh</span>
+                                            </div>
+                                            <h1 class="text-[#0d121b] dark:text-white text-4xl lg:text-6xl font-black leading-tight tracking-tight">
+                                                Learn Driving the <span class="text-primary">Right Way</span> in Hapur
+                                            </h1>
+                                            <span class="block mt-2 text-base lg:text-lg font-semibold text-primary">
+                                                 क्लच, ब्रेक और डर — तीनों छोड़ना हम सिखाते हैं!
+                                            </span>
+                                            <p class="text-[#4c669a] dark:text-gray-400 text-lg leading-relaxed">
+                                                Master the road with expert guidance from Certified Instructors. Professional training tailored for Hapur ARTO requirements.
+                                            </p>
+                                        </div>
+                                        <div class="flex flex-wrap gap-4">
+                                            <button onClick={() => navigate('/contact')} class="flex min-w-[200px] cursor-pointer items-center justify-center rounded-lg h-14 px-6 bg-primary text-white text-lg font-bold shadow-lg shadow-primary/30 hover:-translate-y-1 transition-all">
+                                                Book First Lesson
+                                            </button>
+                                            <button onClick={() => navigate('/courses')} class="flex min-w-[200px] cursor-pointer items-center justify-center rounded-lg h-14 px-6 bg-white dark:bg-gray-800 border-2 border-[#e7ebf3] dark:border-gray-700 text-[#0d121b] dark:text-white text-lg font-bold hover:bg-gray-50 dark:hover:bg-gray-700 transition-all">
+                                                View Courses
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        {/* Features etc. simplified for brevity based on Screen 1 structure */}
+                        <section class="px-4 md:px-20 lg:px-40 py-10 bg-white dark:bg-gray-900/50">
+                            <div class="layout-content-container max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div class="flex flex-col gap-2 rounded-xl p-8 border border-[#cfd7e7] dark:border-gray-800 bg-background-light dark:bg-background-dark hover:border-primary transition-colors">
+                                    <span class="material-symbols-outlined text-primary text-3xl mb-2">thumb_up</span>
+                                    <p class="text-[#4c669a] dark:text-gray-400 text-sm font-medium uppercase tracking-widest">Success Rate</p>
+                                    <p class="text-[#0d121b] dark:text-white text-4xl font-black">99%</p>
+                                </div>
+                                <div class="flex flex-col gap-2 rounded-xl p-8 border border-[#cfd7e7] dark:border-gray-800 bg-background-light dark:bg-background-dark hover:border-primary transition-colors">
+                                    <span class="material-symbols-outlined text-primary text-3xl mb-2">verified_user</span>
+                                    <p class="text-[#4c669a] dark:text-gray-400 text-sm font-medium uppercase tracking-widest">Certified Instructors</p>
+                                    <p class="text-[#0d121b] dark:text-white text-4xl font-black">5+</p>
+                                </div>
+                                <div class="flex flex-col gap-2 rounded-xl p-8 border border-[#cfd7e7] dark:border-gray-800 bg-background-light dark:bg-background-dark hover:border-primary transition-colors">
+                                    <span class="material-symbols-outlined text-primary text-3xl mb-2">history_edu</span>
+                                    <p class="text-[#4c669a] dark:text-gray-400 text-sm font-medium uppercase tracking-widest">Years Experience</p>
+                                    <p class="text-[#0d121b] dark:text-white text-4xl font-black">10+</p>
+                                </div>
+                            </div>
+                        </section>
+                    </main>
+                    <Footer />
+                </div>
+            );
+        };
+
+        const AboutScreen = () => {
+  return (
+    <div class="flex flex-col min-h-screen">
+      <Navbar />
+
+      <main class="flex-1">
+        <div class="max-w-[1200px] mx-auto px-10 py-12">
+          <h1 class="text-4xl md:text-5xl font-black mb-8">
+            About Rambha Motor School
+          </h1>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
+            <div class="space-y-6">
+              <p class="text-lg text-[#4c669a] dark:text-slate-400">
+                Founded in 2013, we have been dedicated to empowering thousands of residents of Hapur with safe, responsible, and confident driving skills. From beginners taking their 
+                first step behind the wheel to experienced learners refining their abilities, we have consistently focused on delivering high-quality driving education. We place special 
+                emphasis on real Indian road conditions, ensuring our learners are fully prepared to handle traffic, unexpected situations, and day-to-day driving challenges with confidence. 
+                Our journey reflects a deep commitment to quality education, road safety awareness, and the creation of skilled, responsible, drivers who not only pass their driving tests but 
+                also contribute to safer and more organized roads for everyone.
+              </p>
+
+              <div class="p-6 bg-primary/10 rounded-xl border border-primary/20">
+                <h3 class="font-bold text-xl mb-2">Our Mission</h3>
+                <p class="text-sm">
+                  To produce safe, confident, and responsible drivers through
+                  personalized instruction and modern techniques.
+                </p>
+              </div>
+            </div>
+
+            <div class="rounded-xl overflow-hidden shadow-xl">
+              <img
+                class="w-full"
+                src="./about_us_image.png"
+                alt="Instruction"
+              />
+            </div>
+          </div>
+
+          {/* ===== Added Content Section ===== */}
+          <div class="space-y-6 mb-20">
+            <p class="text-[#4c669a] dark:text-slate-400">
+              Rambha Motor School is serving you since 2013. Our driving
+              instructors are insured and government certified. Rambha Motor Driving
+              Training School is a well-known name in Hapur/NCR for the best motor driving
+              training. We have been serving Hapur/NCR for well over 14 years and
+              get you road-ready in no time.
+            </p>
+
+            <p class="text-[#4c669a] dark:text-slate-400">
+              Our experienced driving instructors offer private driving
+              instruction that prepares students of all ages and skill levels
+              for driving tests and defensive driving requirements. Our
+              instructors are patient, understanding, fully insured, bonded,
+              and professional.
+            </p>
+
+            <p class="text-[#4c669a] dark:text-slate-400">
+              Our trained and highly competent driving instructors and staff at
+              Rambha Motor Driving Training School, Near ARTO, Ofiice Hapur are here to help you
+              learn driving, pass your road test, and obtain your driver’s
+              license with confidence.
+            </p>
+
+            <p class="text-[#4c669a] dark:text-slate-400">
+              Learning how to drive the correct way is always safer and more
+              economical. Our licensed driving school cars are equipped with
+              dual controls and guided by trained professionals who ensure
+              maximum safety. Learning driving with Rambha Motor Driving Training 
+              School is fun because of our friendly and professional instructors. 
+              We provide complete assistance including cars for road tests and 
+              licensed drivers to accompany you.
+            </p>
+            
+            <p class="text-[#4c669a] dark:text-slate-400">
+              We focus not only on driving skills but also on road safety,
+              traffic rules, defensive driving, and responsible
+              behind-the-wheel behavior. This has always been our core goal.
+            </p>
+          </div>
+          {/* ===== End Added Content ===== */}
+
+          <h2 class="text-3xl font-black mb-10 text-center">
+            Our Leadership
+          </h2>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="bg-white dark:bg-slate-900 p-8 rounded-xl border border-[#cfd7e7] dark:border-slate-800 flex flex-col md:flex-row gap-6">
+              <img
+                class="w-32 h-32 rounded-full object-cover"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzMGNPxOpEWhH_1Z02SLfvMCKhN1nTmKbjzgA0w63mhSCeggm2fEuvPdViT6MgpUu8RWGNVvXJ3N_hqKS8vN-U2huNvc07ckRGk2ZyzQxO9pI84JHpfUrCn5Dk-e7T3gHTAC_xZ3BL1weEL_B7gSK328Eja1U1PpCPMQyIXmc9k2spbQEEL5PcFs5_V_-ZGzQKtDg29hprkNwAHvdFCBnEDUtluhQW99h53RezK4J8jJi-FaOYYFFQweHOPv4sl442JWyiqGHNHZM"
+                alt="Anuj Kumar Yadav"
+              />
+              <div>
+                <h3 class="text-xl font-bold">Anuj Kumar Yadav</h3>
+                <p class="text-primary font-bold text-sm mb-4">
+                  Founder & Owner
+                </p>
+                <p class="text-sm text-[#4c669a]">
+                  14+ years of professional driving instruction experience.
+                </p>
+              </div>
+            </div>
+
+            <div class="bg-white dark:bg-slate-900 p-8 rounded-xl border border-[#cfd7e7] dark:border-slate-800 flex flex-col md:flex-row gap-6">
+              <img
+                class="w-32 h-32 rounded-full object-cover"
+                src="./guddu_pandit.png"
+                alt="Guddu Pandit"
+              />
+              <div>
+                <h3 class="text-xl font-bold">Guddu Pandit</h3>
+                <p class="text-primary font-bold text-sm mb-4">
+                  Operations Lead
+                </p>
+                <p class="text-sm text-[#4c669a]">
+                  Ensures seamless RTO documentation and student coordination.
+                </p>
+              </div>
+            </div>
+
+            <div class="bg-white dark:bg-slate-900 p-8 rounded-xl border border-[#cfd7e7] dark:border-slate-800 flex flex-col md:flex-row gap-6">
+              <img
+                class="w-32 h-32 rounded-full object-cover"
+                src=""
+                alt="vacant"
+              />
+            <div>
+                <h3 class="text-xl font-bold">Vacant</h3>
+                <p class="text-primary font-bold text-sm mb-4">
+                  Car Driving Instructor
+                </p>
+                <p class="text-sm text-[#4c669a]">
+                  Guides beginners to become confident and responsible drivers.
+                </p>
+            </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <Footer />
+    </div>
+  );
+};
+
+        const CoursesScreen = () => {
+            const navigate = useNavigate();
+            const packages = [
+                { title: "Silver", price: "3,500", tag: "Basic", perks: ["10 Practical Sessions", "Theory Classes", "Simulator Intro", "Doorstep Pickup"] },
+                { title: "Gold", price: "4,500", tag: "Popular", featured: true, perks: ["15 Practical Sessions", "Highway Sessions", "Reverse Mastery", "RTO Assistance"] },
+                { title: "Platinum", price: "6,000", tag: "Modern", perks: ["12 Premium Sessions", "Night Driving", "Sensor Guidance", "Advanced Trainer"] }
+            ];
+
+            return (
+                <div class="flex flex-col min-h-screen">
+                    <Navbar />
+                    <main class="flex-1">
+                        <section class="max-w-[1280px] mx-auto p-4 md:p-10">
+                            <div class="relative overflow-hidden rounded-xl bg-slate-900 min-h-[300px] flex flex-col items-center justify-center text-center p-12">
+                                <h1 class="text-white text-5xl font-black mb-4">Our Training Courses</h1>
+                                <p class="text-slate-200 text-lg max-w-2xl">Master the roads of Hapur with expert instructors and flexible timing.</p>
+                            </div>
+                        </section>
+                        <section class="max-w-[1200px] mx-auto px-4 py-12">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                {packages.map((pkg, i) => (
+                                    <div key={i} class={`flex flex-col gap-6 rounded-xl border p-8 transition-shadow hover:shadow-xl bg-white dark:bg-slate-900 ${pkg.featured ? 'border-primary border-2 scale-105 z-10' : 'border-[#cfd7e7] dark:border-slate-800'}`}>
+                                        <div class="flex items-center justify-between">
+                                            <h3 class="text-xl font-bold">{pkg.title}</h3>
+                                            <span class="text-xs font-bold uppercase px-2 py-1 rounded bg-slate-100 dark:bg-slate-800">{pkg.tag}</span>
+                                        </div>
+                                        <div class="flex items-baseline gap-1">
+                                            <span class="text-sm font-semibold text-slate-500">INR</span>
+                                            <span class="text-5xl font-black text-primary">{pkg.price}</span>
+                                        </div>
+                                        <button onClick={() => navigate('/contact')} class={`w-full py-3 rounded-lg font-bold transition-all ${pkg.featured ? 'bg-primary text-white' : 'bg-slate-100 dark:bg-slate-800 text-primary'}`}>Enroll Now</button>
+                                        <ul class="space-y-4">
+                                            {pkg.perks.map((p, j) => (
+                                                <li key={j} class="flex items-center gap-3 text-sm">
+                                                    <span class="material-symbols-outlined text-primary text-xl">check_circle</span>
+                                                    {p}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+                    </main>
+                    <Footer />
+                </div>
+            );
+        };
+
+        const GalleryScreen = () => {
+    const [currentIndex, setCurrentIndex] = useState(null);
+
+    const items = [
+        { img: "./car_1_image.png", title: "Training Fleet Side View", desc: "Dual-control Car" },
+        { img: "./driving_class_1_image.png", title: "Practical Driving Session at night", desc: "Learner practicing driving with instructor" },
+        { img: "./car_2_image.png", title: "Training Fleet Front View", desc: "Dual-control Car" },
+        { img: "./driving_class_2_image.png", title: "Practical Driving Session", desc: "Learner practicing driving with instructor" },
+        { img: "./driving_class_3_image.png", title: "Practical Driving Session", desc: "Learner practicing driving with instructor" },
+        { img: "./driving_class_4_image.png", title: "Practical Driving Session", desc: "Learner practicing driving with instructor" },
+    ];
+
+    const prevImage = (e) => {
+        e.stopPropagation();
+        setCurrentIndex((prev) =>
+            prev === 0 ? items.length - 1 : prev - 1
+        );
+    };
+
+    const nextImage = (e) => {
+        e.stopPropagation();
+        setCurrentIndex((prev) =>
+            prev === items.length - 1 ? 0 : prev + 1
+        );
+    };
+
+    return (
+        <div class="flex flex-col min-h-screen">
+            <Navbar />
+
+            <main class="flex-1 max-w-[1280px] mx-auto px-10 py-12">
+                <h1 class="text-4xl font-black mb-8 border-l-4 border-primary pl-6">
+                    Photo Gallery
+                </h1>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {items.map((item, i) => (
+                        <div
+                            key={i}
+                            class="group rounded-xl bg-white dark:bg-slate-800 p-3 shadow-sm hover:-translate-y-2 transition-transform cursor-pointer"
+                            onClick={() => setCurrentIndex(i)}
+                        >
+                            <div class="aspect-video overflow-hidden rounded-lg mb-4">
+                                <img
+                                    src={item.img}
+                                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                    alt={item.title}
+                                />
+                            </div>
+                            <h3 class="text-lg font-bold">{item.title}</h3>
+                            <p class="text-sm text-slate-500">{item.desc}</p>
+                        </div>
+                    ))}
+                </div>
+            </main>
+
+            <Footer />
+
+            {/* 🔥 Lightbox Modal */}
+            {currentIndex !== null && (
+                <div
+                    class="fixed inset-0 bg-black/80 flex items-center justify-center z-50"
+                    onClick={() => setCurrentIndex(null)}
+                >
+                    {/* ❌ Close */}
+                    <button
+                        class="absolute top-6 right-6 text-white text-3xl font-bold"
+                        onClick={() => setCurrentIndex(null)}
+                    >
+                        ✕
+                    </button>
+
+                    {/* ◀ Left Arrow */}
+                    <button
+                        class="absolute left-6 text-white text-5xl font-bold hover:scale-110 transition"
+                        onClick={prevImage}
+                    >
+                        ‹
+                    </button>
+
+                    {/* Image */}
+                    <img
+                        src={items[currentIndex].img}
+                        class="max-w-[90%] max-h-[90%] rounded-lg shadow-lg"
+                        onClick={(e) => e.stopPropagation()}
+                    />
+
+                    {/* ▶ Right Arrow */}
+                    <button
+                        class="absolute right-6 text-white text-5xl font-bold hover:scale-110 transition"
+                        onClick={nextImage}
+                    >
+                        ›
+                    </button>
+                </div>
+            )}
+        </div>
+    );
+};
+
+
+
+        const RoadSignsScreen = () => {
+            const signs = [
+                { title: "Stop", cat: "Mandatory", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuCqfVeuPp3Jo0JBo3AYPvV8tpo5x9dNVyNprP_7TeCTuoUuTYRhcsnuJIys8c3YLrSVYahbPGeM1BPS7ldPAr9OrF8WkVE6kurrikjSVONZp_TkDLiA5WoJZJSnUkwphKcfOIa0VSw_zJmQ1AmT0sCwqQ-S0ZfC4wON5SBBIbppX3XXEoveBwMIB3flWe-h5gnFRjcE1bx6t_ti81GbqB60lv_idQyKDCH2XPqazqWdzIxMF7Sb53-oyQRbq95f8c-_S84fv8yWf-o" },
+                { title: "No Entry", cat: "Mandatory", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuAa1-0kv7pvnC_3u2mAxGdAoEN6pQ_fuAU9ZuGpF5FQ2kb2b--hnXQSjpnp-dVOl2oVUa36da3gP4lkaye5Qj-r-wFxCZLwCBEHkS8OF4xsLMxBmpDJMcsEyQvvf2jICtIv017kyAWRj_J0Ro8W6qfH3unkQ3JIZcUCFxFlNM-Up4rdodqU_8I73G7QmtXh-8mNg-IkZI-u4CdpLtiAj5GajOltpbJh4EPWysgxIYIGudSEUCp0CML534gAijJzAl2NZcPWvQt26fw" },
+                { title: "Speed Limit 50", cat: "Mandatory", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuA6Z3cnhvpxGSVt2pvvsyqNIK2Q1FWRgZtsSnT-myyhwZHl4CZYEwDCsvcm3T23tWKHXEz9DE14K4x-u2TZnxgTzuK0DV4l0h0zUhrSRk0ghz2x1UQ32AHkonLmBEOgKBwHnJiBTKzFXZUSRqCC0rJw7yZ4s-kMhC55dkZEODClC8MbsAb_19JCV_VSGoP028rZLy7E9mdK-d-SCSXV89W1-czOGk0Fgi0fQ09bEsOgkY6XEFNzjIBfIn56kjdhNAlEjykLHTgdxiw" }
+            ];
+
+            return (
+                <div class="flex flex-col min-h-screen">
+                    <Navbar />
+                    <main class="flex-1 max-w-[1200px] mx-auto px-10 py-12">
+                        <h1 class="text-4xl font-black mb-4">Road Signs Guide</h1>
+                        <p class="text-slate-500 mb-12">Comprehensive guide for the RTO driving license test.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            {signs.map((sign, i) => (
+                                <div key={i} class="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700">
+                                    <div class="aspect-square bg-slate-50 dark:bg-slate-900 rounded-lg flex items-center justify-center mb-4 border border-slate-100 dark:border-slate-700">
+                                        <img src={sign.img} class="w-24 h-24 object-contain" alt={sign.title}/>
+                                    </div>
+                                    <h3 class="font-bold text-lg">{sign.title}</h3>
+                                    <p class="text-xs text-primary font-bold uppercase">{sign.cat}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </main>
+                    <Footer />
+                </div>
+            );
+        };
+
+        const ContactScreen = () => {
+        const [formData, setFormData] = useState({
+            name: "",
+            phone: "",
+            address: "",
+            course: "",
+            });
+        const navigate = useNavigate();
+        const [success, setSuccess] = useState(false);
+
+        const handleSubmit = (e) => {
+            e.preventDefault();
+
+            if (!e.target.checkValidity()) {
+                e.target.reportValidity();
+                return;
+            }
+
+            emailjs
+                .send(
+                "service_zgtwfoe",       // ✅ Service ID
+                "template_plwajca",      // ✅ Template ID
+                {
+                    name: formData.name,
+                    phone: formData.phone,
+                    address: formData.address,
+                    course: formData.course,
+                }
+                )
+                .then(
+                () => {
+                    setSuccess(true);
+
+                    setTimeout(() => {
+                    navigate("/");
+                    }, 10000);
+                },
+                (error) => {
+                    alert("Email failed ❌");
+                    console.error(error);
+                }
+                );
+        };
+
+        return (
+            <div className="flex flex-col min-h-screen">
+            <Navbar />
+
+            <main className="flex-1 max-w-[1200px] mx-auto px-10 py-12">
+                <h1 className="text-4xl font-black mb-4">Contact Us</h1>
+                <p className="text-slate-500 mb-12">Book your trial session today.</p>
+
+                {success && (
+                <div className="mb-8 bg-green-100 border border-green-400 text-green-700 px-6 py-4 rounded-lg flex items-center gap-3">
+                    <span className="material-symbols-outlined text-green-600">
+                    check_circle
+                    </span>
+                    <p className="font-semibold">
+                    Form submitted successfully! Redirecting to dashboard in 10 seconds...
+                    </p>
+                </div>
+                )}
+
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                <form
+                    onSubmit={handleSubmit}
+                    className={`lg:col-span-7 bg-white dark:bg-slate-900 p-8 rounded-xl border border-slate-200 dark:border-slate-800 space-y-6
+                    ${success ? "opacity-60 pointer-events-none" : ""}
+                    `}
+                    >
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <label className="flex flex-col gap-2">
+                        <span className="text-sm font-semibold">Name</span>
+                        <input
+                            required
+                            disabled={success}
+                            type="text"
+                            maxLength={30}
+                            value={formData.name}
+                            onChange={(e) =>
+                            setFormData({ ...formData, name: e.target.value })
+                            }
+                            onInput={(e) =>
+                            (e.target.value = e.target.value.replace(/[^A-Za-z ]/g, ""))
+                            }
+                            className="h-12 border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 rounded-lg px-4"
+                        />
+                        </label>
+
+                        <label className="flex flex-col gap-2">
+                        <span className="text-sm font-semibold">Phone Number</span>
+                        <div className="flex">
+                            <span className="flex items-center px-3 bg-slate-200 dark:bg-slate-800 border border-r-0 rounded-l-lg text-sm font-semibold">
+                            +91
+                            </span>
+                            <input
+                            required
+                            disabled={success}
+                            type="tel"
+                            maxLength={10}
+                            minLength={10}
+                            pattern="[0-9]{10}"
+                            title="Please enter 10 digit phone number"
+                            value={formData.phone}
+                            onChange={(e) =>
+                                setFormData({ ...formData, phone: e.target.value })
+                            }
+                            onInput={(e) =>
+                                (e.target.value = e.target.value.replace(/[^0-9]/g, ""))
+                            }
+                            className="h-12 flex-1 border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 rounded-r-lg px-4"
+                            />
+                        </div>
+                        </label>
+
+                        <label className="flex flex-col gap-2 md:col-span-2">
+                        <span className="text-sm font-semibold">Address</span>
+                        <textarea
+                            required
+                            disabled={success}
+                            rows="3"
+                            maxLength={90}
+                            value={formData.address}
+                            onChange={(e) =>
+                            setFormData({ ...formData, address: e.target.value })
+                            }
+                            className="border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 rounded-lg px-4 py-3 resize-none"
+                        />
+                        </label>
+
+                        <label className="flex flex-col gap-2 md:col-span-2">
+                        <span className="text-sm font-semibold">Select Course</span>
+                        <select
+                            required
+                            disabled={success}
+                            value={formData.course}
+                            onChange={(e) =>
+                            setFormData({ ...formData, course: e.target.value })
+                            }
+                            className="h-12 border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 rounded-lg px-4"
+                        >
+                            <option value="">-- Select a Course --</option>
+                            <option value="Silver">Silver</option>
+                            <option value="Gold">Gold</option>
+                            <option value="Platinum">Platinum</option>
+                        </select>
+                        </label>
+                    </div>
+
+                    <button
+                        type="submit"
+                        disabled={success}
+                        className={`w-full font-bold h-14 rounded-lg transition-all ${
+                        success
+                            ? "bg-green-500 cursor-not-allowed"
+                            : "bg-primary text-white hover:bg-primary/90"
+                        }`}
+                    >
+                        {success ? "Submitted ✓" : "Book Trial Lesson"}
+                    </button>
+                </form>
+
+                <div className="lg:col-span-5 space-y-6">
+                    <div className="bg-primary text-white p-8 rounded-xl shadow-xl">
+                    <h3 className="text-xl font-bold mb-4">Contact Info</h3>
+                    <div className="space-y-4">
+                        <div className="flex items-center gap-4">
+                        <span className="material-symbols-outlined">person</span>
+                        <div>
+                            <p className="text-xs opacity-70">Support Head</p>
+                            <p className="font-bold">Guddu Pandit</p>
+                        </div>
+                        </div>
+                        <div className="flex items-center gap-4">
+                        <span className="material-symbols-outlined">call</span>
+                        <div>
+                            <p className="text-xs opacity-70">Phone</p>
+                            <a href="tel:+919720340320" className="font-bold hover:underline">
+                            +91 9720340320
+                            </a>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+
+                    <div className="aspect-video bg-slate-200 dark:bg-slate-800 rounded-xl overflow-hidden">
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3497.763497084748!2d77.76492121047634!3d28.75647737549544!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390c85e7f2c222a5%3A0xa7326347dd2f8eb0!2sRegional%20Transport%20Office%20RTO%20HAPUR!5e0!3m2!1sen!2sin!4v1769594376447!5m2!1sen!2sin"
+                        width="100%"
+                        height="100%"
+                        frameBorder="0"
+                    />
+                    </div>
+                </div>
+                </div>
+            </main>
+
+            <Footer />
+            </div>
+        );
+        };
+            // --- Main App ---
+
+            const App = () => {
+                return (
+                    <MemoryRouter>
+                        <Routes>
+                            <Route path="/" element={<HomeScreen />} />
+                            <Route path="/about" element={<AboutScreen />} />
+                            <Route path="/courses" element={<CoursesScreen />} />
+                            <Route path="/gallery" element={<GalleryScreen />} />
+                            <Route path="/road-signs" element={<RoadSignsScreen />} />
+                            <Route path="/contact" element={<ContactScreen />} />
+                        </Routes>
+                    </MemoryRouter>
+                );
+            };
+
+        const root = createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
